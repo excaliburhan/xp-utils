@@ -7,9 +7,9 @@ A JavaScript utility library
 
 ### Usage
 
-Fully use
+- Fully use
 
-```
+```js
 import _ from 'xp-utils' // import clone from 'xp-utils/dist/clone.js'
 
 const obj1 = { a: 1, b: { c: 2 } }
@@ -19,9 +19,9 @@ console.log(obj1) // { a: 1, b: { c: 2 } }
 console.log(obj2) // { a: 3, b: { c: 2 } }
 ```
 
-On demand
+- On demand
 
-```
+```js
 import { deepClone } from 'xp-utils' // import { deepClone } from 'xp-utils/dist/clone.js'
 
 const obj1 = { a: 1, b: { c: 2 } }
