@@ -70,11 +70,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 2:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -83,31 +84,73 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-exports.deepClone = deepClone;
-// 对象和数组的深拷贝
-function deepClone(source) {
-  if (!source && (typeof source === 'undefined' ? 'undefined' : _typeof(source)) !== 'object') {
-    throw new Error('error arguments', 'shallowClone');
+exports.query = query;
+exports.hash = hash;
+exports.hostname = hostname;
+exports.domain = domain;
+exports.sub = sub;
+exports.pathname = pathname;
+// 获取url的query
+function query(name, isHash) {
+  var reg = void 0,
+      ret = void 0,
+      query = void 0;
+  var urlStr = isHash ? window.location.hash : window.location.search;
+  urlStr = urlStr.substr(1);
+  if (name) {
+    reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+    query = urlStr.match(reg);
+    return query !== null ? decodeURIComponent(query[2]) : null;
   }
-  var targetObj = source.constructor === Array ? [] : {};
-  for (var keys in source) {
-    if (source.hasOwnProperty(keys)) {
-      if (source[keys] && _typeof(source[keys]) === 'object') {
-        targetObj[keys] = source[keys].constructor === Array ? [] : {};
-        targetObj[keys] = deepClone(source[keys]);
-      } else {
-        targetObj[keys] = source[keys];
-      }
-    }
-  }
-  return targetObj;
+  reg = new RegExp(/(^|&)(\w+)=([\w]*)/, 'g');
+  query = urlStr.match(reg);
+  ret = {};
+  query.forEach(function (v) {
+    var arr = v.split('=');
+    if (arr[0].indexOf('&') > -1) arr[0] = arr[0].slice(1);
+    ret[arr[0]] = decodeURIComponent(arr[1]);
+  });
+  return ret;
 }
 
-exports.default = { deepClone: deepClone };
+// 获取url的hash
+function hash(name) {
+  query(name, true);
+}
+
+// 获取url的hostname
+function hostname() {
+  return window.location.hostname;
+}
+
+// 获取url的domain
+function domain() {
+  var hostname = window.location.hostname;
+  var hostArr = hostname.split('.');
+  if (hostArr.length > 2) {
+    hostArr.splice(0, 1);
+  }
+  return hostArr.join('.');
+}
+
+// 获取url的sub
+function sub() {
+  var hostname = window.location.hostname;
+  var hostArr = hostname.split('.');
+  if (hostArr.length > 2) {
+    return hostArr[1];
+  }
+  return '';
+}
+
+// 获取url的pathname
+function pathname() {
+  return window.location.pathname;
+}
+
+exports.default = { query: query, hash: hash, hostname: hostname, domain: domain, sub: sub, pathname: pathname };
 
 /***/ })
-/******/ ]);
+
+/******/ });
 });

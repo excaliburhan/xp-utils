@@ -137,11 +137,7 @@ function ago(time) {
   }
 }
 
-exports.default = {
-  formatDate: formatDate,
-  duration: duration,
-  ago: ago
-};
+exports.default = { formatDate: formatDate, duration: duration, ago: ago };
 
 /***/ })
 /******/ ]);

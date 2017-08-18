@@ -70,11 +70,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 3:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -83,31 +84,38 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-exports.deepClone = deepClone;
-// 对象和数组的深拷贝
-function deepClone(source) {
-  if (!source && (typeof source === 'undefined' ? 'undefined' : _typeof(source)) !== 'object') {
-    throw new Error('error arguments', 'shallowClone');
-  }
-  var targetObj = source.constructor === Array ? [] : {};
-  for (var keys in source) {
-    if (source.hasOwnProperty(keys)) {
-      if (source[keys] && _typeof(source[keys]) === 'object') {
-        targetObj[keys] = source[keys].constructor === Array ? [] : {};
-        targetObj[keys] = deepClone(source[keys]);
-      } else {
-        targetObj[keys] = source[keys];
-      }
-    }
-  }
-  return targetObj;
+exports.swap = swap;
+exports.unique = unique;
+exports.newArray = newArray;
+// 交换数组中元素位置
+function swap(arr, index1, index2) {
+  arr[index1] = arr.splice(index2, 1, arr[index1])[0];
+  return arr;
 }
 
-exports.default = { deepClone: deepClone };
+// 去除数组重复元素，不支持引用类型
+function unique(arr) {
+  return arr.filter(function (v, i, _) {
+    return _.indexOf(v) === i;
+  });
+}
+
+// 快速生成有序数组
+function newArray(num) {
+  var from = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+  return Array(num).fill().map(function (_, i) {
+    return i + from;
+  });
+}
+
+exports.default = {
+  swap: swap,
+  unique: unique,
+  newArray: newArray
+};
 
 /***/ })
-/******/ ]);
+
+/******/ });
 });
