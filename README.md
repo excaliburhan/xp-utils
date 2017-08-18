@@ -43,6 +43,11 @@ console.log(obj2) // { a: 3, b: { c: 2 } }
 - unique
 - newArray
 
+### throtte.js
+
+- throtte
+- debounce
+
 #### date.js
 
 - formatDate
