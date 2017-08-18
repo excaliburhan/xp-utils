@@ -1,0 +1,6 @@
+{
+  "root": true,
+  "extends": "xp-fe",
+  "env": {},
+  "plugins": []
+}
