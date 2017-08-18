@@ -70,11 +70,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */
+/* 0 */,
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -97,7 +98,7 @@ function deepClone(source) {
     if (source.hasOwnProperty(keys)) {
       if (source[keys] && _typeof(source[keys]) === 'object') {
         targetObj[keys] = source[keys].constructor === Array ? [] : {};
-        targetObj[keys] = this.deepClone(source[keys]);
+        targetObj[keys] = deepClone(source[keys]);
       } else {
         targetObj[keys] = source[keys];
       }
@@ -106,9 +107,7 @@ function deepClone(source) {
   return targetObj;
 }
 
-exports.default = {
-  deepClone: deepClone
-};
+exports.default = { deepClone: deepClone };
 
 /***/ })
 /******/ ]);

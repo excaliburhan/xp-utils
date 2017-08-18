@@ -70,11 +70,48 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.swap = swap;
+exports.unique = unique;
+exports.newArray = newArray;
+// 交换数组中元素位置
+function swap(arr, index1, index2) {
+  arr[index1] = arr.splice(index2, 1, arr[index1])[0];
+  return arr;
+}
+
+// 去除数组重复元素，不支持引用类型
+function unique(arr) {
+  return arr.filter(function (v, i, _) {
+    return _.indexOf(v) === i;
+  });
+}
+
+// 快速生成有序数组
+function newArray(num) {
+  var from = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+  return Array(num).fill().map(function (_, i) {
+    return i + from;
+  });
+}
+
+exports.default = { swap: swap, unique: unique, newArray: newArray };
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -97,7 +134,7 @@ function deepClone(source) {
     if (source.hasOwnProperty(keys)) {
       if (source[keys] && _typeof(source[keys]) === 'object') {
         targetObj[keys] = source[keys].constructor === Array ? [] : {};
-        targetObj[keys] = this.deepClone(source[keys]);
+        targetObj[keys] = deepClone(source[keys]);
       } else {
         targetObj[keys] = source[keys];
       }
@@ -106,12 +143,10 @@ function deepClone(source) {
   return targetObj;
 }
 
-exports.default = {
-  deepClone: deepClone
-};
+exports.default = { deepClone: deepClone };
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -173,14 +208,10 @@ function ago(time) {
   }
 }
 
-exports.default = {
-  formatDate: formatDate,
-  duration: duration,
-  ago: ago
-};
+exports.default = { formatDate: formatDate, duration: duration, ago: ago };
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -189,33 +220,126 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ago = exports.duration = exports.formatDate = exports.deepClone = undefined;
+exports.query = query;
+exports.hash = hash;
+exports.hostname = hostname;
+exports.domain = domain;
+exports.sub = sub;
+exports.pathname = pathname;
+// 获取url的query
+function query(name, isHash) {
+  var reg = void 0,
+      ret = void 0,
+      query = void 0;
+  var urlStr = isHash ? window.location.hash : window.location.search;
+  urlStr = urlStr.substr(1);
+  if (name) {
+    reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+    query = urlStr.match(reg);
+    return query !== null ? decodeURIComponent(query[2]) : null;
+  }
+  reg = new RegExp(/(^|&)(\w+)=([\w]*)/, 'g');
+  query = urlStr.match(reg);
+  ret = {};
+  query.forEach(function (v) {
+    var arr = v.split('=');
+    if (arr[0].indexOf('&') > -1) arr[0] = arr[0].slice(1);
+    ret[arr[0]] = decodeURIComponent(arr[1]);
+  });
+  return ret;
+}
 
-var _clone = __webpack_require__(0);
+// 获取url的hash
+function hash(name) {
+  query(name, true);
+}
+
+// 获取url的hostname
+function hostname() {
+  return window.location.hostname;
+}
+
+// 获取url的domain
+function domain() {
+  var hostname = window.location.hostname;
+  var hostArr = hostname.split('.');
+  if (hostArr.length > 2) {
+    hostArr.splice(0, 1);
+  }
+  return hostArr.join('.');
+}
+
+// 获取url的sub
+function sub() {
+  var hostname = window.location.hostname;
+  var hostArr = hostname.split('.');
+  if (hostArr.length > 2) {
+    return hostArr[1];
+  }
+  return '';
+}
+
+// 获取url的pathname
+function pathname() {
+  return window.location.pathname;
+}
+
+exports.default = { query: query, hash: hash, hostname: hostname, domain: domain, sub: sub, pathname: pathname };
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.pathname = exports.sub = exports.domain = exports.hostname = exports.hash = exports.query = exports.ago = exports.duration = exports.formatDate = exports.debounce = exports.throtte = exports.newArray = exports.unique = exports.swap = exports.deepClone = undefined;
+
+var _clone = __webpack_require__(1);
 
 var _clone2 = _interopRequireDefault(_clone);
 
-var _date = __webpack_require__(1);
+var _array = __webpack_require__(0);
+
+var _array2 = _interopRequireDefault(_array);
+
+var _date = __webpack_require__(2);
 
 var _date2 = _interopRequireDefault(_date);
 
+var _url = __webpack_require__(3);
+
+var _url2 = _interopRequireDefault(_url);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @author xiaoping
- * @email edwardhjp@gmail.com
- * @create date 2017-08-18 09:40:00
- * @modify date 2017-08-18 09:40:00
- * @desc [utils方法]
-*/
-
-var utils = Object.assign({}, _clone2.default, _date2.default);
+var utils = Object.assign({}, _clone2.default, _array2.default, { throtte: _array.throtte, debounce: _array.debounce }, _date2.default, _url2.default); /**
+                                                                                                                                                         * @author xiaoping
+                                                                                                                                                         * @email edwardhjp@gmail.com
+                                                                                                                                                         * @create date 2017-08-18 09:40:00
+                                                                                                                                                         * @modify date 2017-08-18 09:40:00
+                                                                                                                                                         * @desc [utils方法]
+                                                                                                                                                        */
 
 exports.default = utils;
 exports.deepClone = _clone.deepClone;
+exports.swap = _array.swap;
+exports.unique = _array.unique;
+exports.newArray = _array.newArray;
+exports.throtte = _array.throtte;
+exports.debounce = _array.debounce;
 exports.formatDate = _date.formatDate;
 exports.duration = _date.duration;
 exports.ago = _date.ago;
+exports.query = _url.query;
+exports.hash = _url.hash;
+exports.hostname = _url.hostname;
+exports.domain = _url.domain;
+exports.sub = _url.sub;
+exports.pathname = _url.pathname;
 
 /***/ })
 /******/ ]);

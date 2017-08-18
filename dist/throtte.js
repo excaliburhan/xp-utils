@@ -70,12 +70,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 2:
+/***/ 5:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -84,60 +84,58 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.formatDate = formatDate;
-exports.duration = duration;
-exports.ago = ago;
-// 格式化时间
-function formatDate(time, fmt) {
-  var d = new Date(time);
-  if (!fmt) return time;
-  var obj = {
-    'M+': d.getMonth() + 1,
-    'D+': d.getDate(),
-    'h+': d.getHours(),
-    'm+': d.getMinutes(),
-    's+': d.getSeconds(),
-    'q+': Math.floor((d.getMonth() + 3) / 3),
-    'S': d.getMilliseconds()
-  };
-  if (/(Y+)/.test(fmt)) {
-    fmt = fmt.replace(RegExp.$1, (d.getFullYear() + '').substr(4 - RegExp.$1.length));
-  }
-  for (var key in obj) {
-    if (new RegExp('(' + key + ')').test(fmt)) {
-      fmt = fmt.replace(RegExp.$1, RegExp.$1.length === 1 ? obj[key] : ('00' + obj[key]).substr(('' + obj[key]).length));
+exports.throttle = throttle;
+exports.debounce = debounce;
+// 节流函数，指定时间执行一次
+function throttle(fn, waitTime, immediate, isDebounce) {
+  var timer = null;
+  var lastTime = 0; // last execute time
+
+  return function () {
+    function exec() {
+      lastTime = +new Date();
+      fn.apply(context, args);
     }
-  }
-  return fmt;
+
+    function clear() {
+      timer = null;
+    }
+
+    var context = this;
+    var args = arguments;
+    var nowTime = +new Date();
+    var passTime = nowTime - lastTime;
+
+    if (isDebounce && !timer) {
+      exec();
+    }
+
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    if (immediate && !timer) {
+      exec();
+    }
+
+    if (!isDebounce && passTime > waitTime) {
+      exec();
+    } else {
+      if (isDebounce) {
+        timer = setTimeout(clear, waitTime);
+      } else {
+        timer = setTimeout(exec, waitTime - passTime);
+      }
+    }
+  };
 }
 
-// 持续时间
-function duration(sec) {
-  var h = ~~(sec / 3600);
-  var m = ~~(sec % 3600 / 60);
-  var s = sec % 3600 % 60;
-  var ret = '';
-  if (h) ret += h + '\u65F6';
-  if (m) ret += m + '\u5206';
-  if (s) ret += s + '\u79D2';
-  return ret;
+// 防抖函数，到达指定时间间隔执行
+function debounce(fn, waitTime, immediate) {
+  return throttle(fn, waitTime, immediate, true);
 }
 
-// 经过时间
-function ago(time) {
-  var between = Date.now() - Number(time);
-  if (between < 60) {
-    return ~~between + '秒前';
-  } else if (between < 3600) {
-    return ~~(between / 60) + '分前';
-  } else if (between < 86400) {
-    return ~~(between / 3600) + '小时前';
-  } else {
-    return ~~(between / 86400) + '天前';
-  }
-}
-
-exports.default = { formatDate: formatDate, duration: duration, ago: ago };
+exports.default = { throttle: throttle, debounce: debounce };
 
 /***/ })
 

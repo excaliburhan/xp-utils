@@ -8,7 +8,7 @@ export function deepClone (source) {
     if (source.hasOwnProperty(keys)) {
       if (source[keys] && typeof source[keys] === 'object') {
         targetObj[keys] = source[keys].constructor === Array ? [] : {}
-        targetObj[keys] = this.deepClone(source[keys])
+        targetObj[keys] = deepClone(source[keys])
       } else {
         targetObj[keys] = source[keys]
       }
