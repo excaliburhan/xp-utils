@@ -83,6 +83,43 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.swap = swap;
+exports.unique = unique;
+exports.newArray = newArray;
+// 交换数组中元素位置
+function swap(arr, index1, index2) {
+  arr[index1] = arr.splice(index2, 1, arr[index1])[0];
+  return arr;
+}
+
+// 去除数组重复元素，不支持引用类型
+function unique(arr) {
+  return arr.filter(function (v, i, _) {
+    return _.indexOf(v) === i;
+  });
+}
+
+// 快速生成有序数组
+function newArray(num) {
+  var from = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+  return Array(num).fill().map(function (_, i) {
+    return i + from;
+  });
+}
+
+exports.default = { swap: swap, unique: unique, newArray: newArray };
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -109,7 +146,7 @@ function deepClone(source) {
 exports.default = { deepClone: deepClone };
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -174,7 +211,7 @@ function ago(time) {
 exports.default = { formatDate: formatDate, duration: duration, ago: ago };
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -250,7 +287,6 @@ function pathname() {
 exports.default = { query: query, hash: hash, hostname: hostname, domain: domain, sub: sub, pathname: pathname };
 
 /***/ }),
-/* 3 */,
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -260,32 +296,41 @@ exports.default = { query: query, hash: hash, hostname: hostname, domain: domain
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.pathname = exports.sub = exports.domain = exports.hostname = exports.hash = exports.query = exports.ago = exports.duration = exports.formatDate = exports.deepClone = undefined;
+exports.pathname = exports.sub = exports.domain = exports.hostname = exports.hash = exports.query = exports.ago = exports.duration = exports.formatDate = exports.debounce = exports.throtte = exports.newArray = exports.unique = exports.swap = exports.deepClone = undefined;
 
-var _clone = __webpack_require__(0);
+var _clone = __webpack_require__(1);
 
 var _clone2 = _interopRequireDefault(_clone);
 
-var _date = __webpack_require__(1);
+var _array = __webpack_require__(0);
+
+var _array2 = _interopRequireDefault(_array);
+
+var _date = __webpack_require__(2);
 
 var _date2 = _interopRequireDefault(_date);
 
-var _url = __webpack_require__(2);
+var _url = __webpack_require__(3);
 
 var _url2 = _interopRequireDefault(_url);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var utils = Object.assign({}, _clone2.default, _date2.default, _url2.default); /**
-                                                                                * @author xiaoping
-                                                                                * @email edwardhjp@gmail.com
-                                                                                * @create date 2017-08-18 09:40:00
-                                                                                * @modify date 2017-08-18 09:40:00
-                                                                                * @desc [utils方法]
-                                                                               */
+var utils = Object.assign({}, _clone2.default, _array2.default, { throtte: _array.throtte, debounce: _array.debounce }, _date2.default, _url2.default); /**
+                                                                                                                                                         * @author xiaoping
+                                                                                                                                                         * @email edwardhjp@gmail.com
+                                                                                                                                                         * @create date 2017-08-18 09:40:00
+                                                                                                                                                         * @modify date 2017-08-18 09:40:00
+                                                                                                                                                         * @desc [utils方法]
+                                                                                                                                                        */
 
 exports.default = utils;
 exports.deepClone = _clone.deepClone;
+exports.swap = _array.swap;
+exports.unique = _array.unique;
+exports.newArray = _array.newArray;
+exports.throtte = _array.throtte;
+exports.debounce = _array.debounce;
 exports.formatDate = _date.formatDate;
 exports.duration = _date.duration;
 exports.ago = _date.ago;

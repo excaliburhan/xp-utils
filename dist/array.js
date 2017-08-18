@@ -70,12 +70,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 3:
+/******/ ([
+/* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -109,13 +108,8 @@ function newArray(num) {
   });
 }
 
-exports.default = {
-  swap: swap,
-  unique: unique,
-  newArray: newArray
-};
+exports.default = { swap: swap, unique: unique, newArray: newArray };
 
 /***/ })
-
-/******/ });
+/******/ ]);
 });

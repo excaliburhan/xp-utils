@@ -14,8 +14,4 @@ export function newArray (num, from = 1) {
   return Array(num).fill().map((_, i) => i + from)
 }
 
-export default {
-  swap,
-  unique,
-  newArray,
-}
+export default { swap, unique, newArray }
