@@ -37,13 +37,12 @@ export function queryFromStr (str, options = {}) {
   const strArr = str.split(splitKey)
   strArr.shift()
   str = splitKey + strArr.join(splitKey)
-  console.log(str)
-  query('', { str, isHash: options.isHash })
+  return query('', { str, isHash: options.isHash })
 }
 
 // 获取url的hash
 export function hash (name) {
-  query(name, { isHash: true })
+  return query(name, { isHash: true })
 }
 
 // 获取url的hostname
