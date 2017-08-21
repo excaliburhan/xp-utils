@@ -291,7 +291,7 @@ function pathname() {
   return window.location.pathname;
 }
 
-exports.default = { query: query, hash: hash, hostname: hostname, domain: domain, sub: sub, pathname: pathname };
+exports.default = { query: query, queryFromStr: queryFromStr, hash: hash, hostname: hostname, domain: domain, sub: sub, pathname: pathname };
 
 /***/ }),
 /* 4 */
@@ -303,7 +303,7 @@ exports.default = { query: query, hash: hash, hostname: hostname, domain: domain
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.pathname = exports.sub = exports.domain = exports.hostname = exports.hash = exports.query = exports.ago = exports.duration = exports.formatDate = exports.debounce = exports.throtte = exports.newArray = exports.unique = exports.swap = exports.deepClone = undefined;
+exports.pathname = exports.sub = exports.domain = exports.hostname = exports.hash = exports.queryFromStr = exports.query = exports.ago = exports.duration = exports.formatDate = exports.debounce = exports.throtte = exports.newArray = exports.unique = exports.swap = exports.deepClone = undefined;
 
 var _clone = __webpack_require__(1);
 
@@ -342,6 +342,7 @@ exports.formatDate = _date.formatDate;
 exports.duration = _date.duration;
 exports.ago = _date.ago;
 exports.query = _url.query;
+exports.queryFromStr = _url.queryFromStr;
 exports.hash = _url.hash;
 exports.hostname = _url.hostname;
 exports.domain = _url.domain;

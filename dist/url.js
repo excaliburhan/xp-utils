@@ -155,7 +155,7 @@ function pathname() {
   return window.location.pathname;
 }
 
-exports.default = { query: query, hash: hash, hostname: hostname, domain: domain, sub: sub, pathname: pathname };
+exports.default = { query: query, queryFromStr: queryFromStr, hash: hash, hostname: hostname, domain: domain, sub: sub, pathname: pathname };
 
 /***/ })
 

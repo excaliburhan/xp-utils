@@ -1,6 +1,7 @@
 // 获取url的query
-export function query (name, isHash, str) {
+export function query (name, options = {}) {
   let reg, ret, query
+  const { str, isHash } = options
   let urlStr = isHash ? window.location.hash : window.location.search
   if (str) urlStr = str
   urlStr = urlStr.substr(1)
@@ -11,23 +12,27 @@ export function query (name, isHash, str) {
   }
   reg = new RegExp(/(^|&)(\w+)=([\w]*)/, 'g')
   query = urlStr.match(reg)
-  ret = {}
-  query.forEach(v => {
-    let arr = v.split('=')
-    if (arr[0].indexOf('&') > -1) arr[0] = arr[0].slice(1)
-    ret[arr[0]] = decodeURIComponent(arr[1])
-  })
+  if (Array.isArray(query)) {
+    ret = {}
+    query.forEach(v => {
+      let arr = v.split('=')
+      if (arr[0].indexOf('&') > -1) arr[0] = arr[0].slice(1)
+      ret[arr[0]] = decodeURIComponent(arr[1])
+    })
+  } else {
+    ret = null
+  }
   return ret
 }
 
 // 从指定字符串获取query
-export function queryFromStr (str, isHash) {
-  query(null, isHash, str)
+export function queryFromStr (str, options = {}) {
+  query('', { str, isHash: true })
 }
 
 // 获取url的hash
 export function hash (name) {
-  query(name, true)
+  query(name, { isHash: true })
 }
 
 // 获取url的hostname
@@ -60,4 +65,4 @@ export function pathname () {
   return window.location.pathname
 }
 
-export default { query, hash, hostname, domain, sub, pathname }
+export default { query, queryFromStr, hash, hostname, domain, sub, pathname }

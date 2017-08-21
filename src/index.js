@@ -10,7 +10,7 @@ import clone, { deepClone } from './clone.js'
 import array, { swap, unique, newArray } from './array'
 import { throtte, debounce } from './array'
 import date, { formatDate, duration, ago } from './date.js'
-import url, { query, hash, hostname, domain, sub, pathname } from './url.js'
+import url, { query, queryFromStr, hash, hostname, domain, sub, pathname } from './url.js'
 
 const utils = Object.assign({}, clone, array, { throtte, debounce }, date, url)
 
@@ -25,5 +25,5 @@ export {
   // date.js
   formatDate, duration, ago,
   // url.js
-  query, hash, hostname, domain, sub, pathname,
+  query, queryFromStr, hash, hostname, domain, sub, pathname,
 }

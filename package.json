@@ -1,10 +1,11 @@
 {
   "name": "xp-utils",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A JavaScript utility library",
   "license": "MIT",
   "main": "dist/index.js",
   "scripts": {
+    "prepare": "npm run build",
     "build": "node build.js",
     "test": "node test/index.js"
   },
