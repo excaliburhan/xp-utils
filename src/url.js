@@ -1,7 +1,8 @@
 // 获取url的query
-export function query (name, isHash) {
+export function query (name, isHash, str) {
   let reg, ret, query
   let urlStr = isHash ? window.location.hash : window.location.search
+  if (str) urlStr = str
   urlStr = urlStr.substr(1)
   if (name) {
     reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
@@ -17,6 +18,11 @@ export function query (name, isHash) {
     ret[arr[0]] = decodeURIComponent(arr[1])
   })
   return ret
+}
+
+// 从指定字符串获取query
+export function queryFromStr (str, isHash) {
+  query(null, isHash, str)
 }
 
 // 获取url的hash
