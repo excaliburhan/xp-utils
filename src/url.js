@@ -1,9 +1,12 @@
 // 获取url的query
 export function query (name, options = {}) {
-  let reg, ret, query
+  let reg, ret, query, urlStr
   const { str, isHash } = options
-  let urlStr = isHash ? window.location.hash : window.location.search
-  if (str) urlStr = str
+  if (str) {
+    urlStr = str
+  } else {
+    urlStr = isHash ? window.location.hash : window.location.search
+  }
   urlStr = urlStr.substr(1)
   if (name) {
     reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
@@ -27,7 +30,15 @@ export function query (name, options = {}) {
 
 // 从指定字符串获取query
 export function queryFromStr (str, options = {}) {
-  query('', { str, isHash: true })
+  let splitKey = '?'
+  if (options.isHash) {
+    splitKey = '#'
+  }
+  const strArr = str.split(splitKey)
+  strArr.shift()
+  str = splitKey + strArr.join(splitKey)
+  console.log(str)
+  query('', { str, isHash: options.isHash })
 }
 
 // 获取url的hash

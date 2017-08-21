@@ -92,12 +92,21 @@ exports.domain = domain;
 exports.sub = sub;
 exports.pathname = pathname;
 // 获取url的query
-function query(name, isHash, str) {
+function query(name) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
   var reg = void 0,
       ret = void 0,
-      query = void 0;
-  var urlStr = isHash ? window.location.hash : window.location.search;
-  if (str) urlStr = str;
+      query = void 0,
+      urlStr = void 0;
+  var str = options.str,
+      isHash = options.isHash;
+
+  if (str) {
+    urlStr = str;
+  } else {
+    urlStr = isHash ? window.location.hash : window.location.search;
+  }
   urlStr = urlStr.substr(1);
   if (name) {
     reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
@@ -106,23 +115,37 @@ function query(name, isHash, str) {
   }
   reg = new RegExp(/(^|&)(\w+)=([\w]*)/, 'g');
   query = urlStr.match(reg);
-  ret = {};
-  query.forEach(function (v) {
-    var arr = v.split('=');
-    if (arr[0].indexOf('&') > -1) arr[0] = arr[0].slice(1);
-    ret[arr[0]] = decodeURIComponent(arr[1]);
-  });
+  if (Array.isArray(query)) {
+    ret = {};
+    query.forEach(function (v) {
+      var arr = v.split('=');
+      if (arr[0].indexOf('&') > -1) arr[0] = arr[0].slice(1);
+      ret[arr[0]] = decodeURIComponent(arr[1]);
+    });
+  } else {
+    ret = null;
+  }
   return ret;
 }
 
 // 从指定字符串获取query
-function queryFromStr(str, isHash) {
-  query(null, isHash, str);
+function queryFromStr(str) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  var splitKey = '?';
+  if (options.isHash) {
+    splitKey = '#';
+  }
+  var strArr = str.split(splitKey);
+  strArr.shift();
+  str = splitKey + strArr.join(splitKey);
+  console.log(str);
+  query('', { str: str, isHash: options.isHash });
 }
 
 // 获取url的hash
 function hash(name) {
-  query(name, true);
+  query(name, { isHash: true });
 }
 
 // 获取url的hostname
