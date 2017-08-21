@@ -1,6 +1,6 @@
 {
   "name": "xp-utils",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A JavaScript utility library",
   "license": "MIT",
   "main": "dist/index.js",
