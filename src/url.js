@@ -21,8 +21,8 @@ export function query (name, isHash, str) {
 }
 
 // 从指定字符串获取query
-export function queryFromStr (str, name, isHash) {
-  query(name, isHash, str)
+export function queryFromStr (str, isHash) {
+  query(null, isHash, str)
 }
 
 // 获取url的hash
