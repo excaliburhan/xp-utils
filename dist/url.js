@@ -85,17 +85,19 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.query = query;
+exports.queryFromStr = queryFromStr;
 exports.hash = hash;
 exports.hostname = hostname;
 exports.domain = domain;
 exports.sub = sub;
 exports.pathname = pathname;
 // 获取url的query
-function query(name, isHash) {
+function query(name, isHash, str) {
   var reg = void 0,
       ret = void 0,
       query = void 0;
   var urlStr = isHash ? window.location.hash : window.location.search;
+  if (str) urlStr = str;
   urlStr = urlStr.substr(1);
   if (name) {
     reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
@@ -111,6 +113,11 @@ function query(name, isHash) {
     ret[arr[0]] = decodeURIComponent(arr[1]);
   });
   return ret;
+}
+
+// 从指定字符串获取query
+function queryFromStr(str, name, isHash) {
+  query(name, isHash, str);
 }
 
 // 获取url的hash

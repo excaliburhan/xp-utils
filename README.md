@@ -57,6 +57,7 @@ console.log(obj2) // { a: 3, b: { c: 2 } }
 #### url.js
 
 - query
+- queryFromStr
 - hash
 - hostname
 - domain
