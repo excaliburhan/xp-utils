@@ -11,7 +11,7 @@ import array, { swap, unique, newArray } from './array'
 import { throtte, debounce } from './array'
 import date, { formatDate, duration, ago } from './date.js'
 import url, { query, queryFromStr, hash, hostname, domain, sub, pathname } from './url.js'
-import string, { len, subStr } from './url.js'
+import string, { len, subStr } from './string.js'
 
 const utils = Object.assign({}, clone, array, { throtte, debounce }, date, url)
 
