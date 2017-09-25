@@ -70,12 +70,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 3:
+/***/ 5:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -84,100 +84,20 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.query = query;
-exports.queryFromStr = queryFromStr;
-exports.hash = hash;
-exports.hostname = hostname;
-exports.domain = domain;
-exports.sub = sub;
-exports.pathname = pathname;
-// 获取url的query
-function query(name) {
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-  var reg = void 0,
-      ret = void 0,
-      query = void 0,
-      urlStr = void 0;
-  var str = options.str,
-      isHash = options.isHash;
-
-  if (str) {
-    urlStr = str;
-  } else {
-    urlStr = isHash ? window.location.hash : window.location.search;
-  }
-  urlStr = urlStr.substr(1);
-  if (name) {
-    reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
-    query = urlStr.match(reg);
-    return query !== null ? decodeURIComponent(query[2]) : null;
-  }
-  reg = new RegExp(/(^|&)(\w+)=([\w]*)/, 'g');
-  query = urlStr.match(reg);
-  if (Array.isArray(query)) {
-    ret = {};
-    query.forEach(function (v) {
-      var arr = v.split('=');
-      if (arr[0].indexOf('&') > -1) arr[0] = arr[0].slice(1);
-      ret[arr[0]] = decodeURIComponent(arr[1]);
-    });
-  } else {
-    ret = null;
-  }
-  return ret;
+exports.len = len;
+exports.subStr = subStr;
+// 字符长度计算
+function len(str) {
+  return str.replace(/[^\x00-\xff]/g, '__').length;
 }
 
-// 从指定字符串获取query
-function queryFromStr(str) {
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-  var splitKey = '?';
-  if (options.isHash) {
-    splitKey = '#';
-  }
-  var strArr = str.split(splitKey);
-  strArr.shift();
-  str = splitKey + strArr.join(splitKey);
-  return query('', { str: str, isHash: options.isHash });
+// 按照长度截取字符串
+function subStr(str, len) {
+  var reg = /[\u4e00-\u9fa5]/g;
+  var slice = str.substring(0, len);
+  var realLen = len - ~~(slice.match(reg) && slice.match(reg).length);
+  return slice.substring(0, realLen || 1);
 }
-
-// 获取url的hash
-function hash(name) {
-  return query(name, { isHash: true });
-}
-
-// 获取url的hostname
-function hostname() {
-  return window.location.hostname;
-}
-
-// 获取url的domain
-function domain() {
-  var hostname = window.location.hostname;
-  var hostArr = hostname.split('.');
-  if (hostArr.length > 2) {
-    hostArr.splice(0, 1);
-  }
-  return hostArr.join('.');
-}
-
-// 获取url的sub
-function sub() {
-  var hostname = window.location.hostname;
-  var hostArr = hostname.split('.');
-  if (hostArr.length > 2) {
-    return hostArr[1];
-  }
-  return '';
-}
-
-// 获取url的pathname
-function pathname() {
-  return window.location.pathname;
-}
-
-exports.default = { query: query, queryFromStr: queryFromStr, hash: hash, hostname: hostname, domain: domain, sub: sub, pathname: pathname };
 
 /***/ })
 
