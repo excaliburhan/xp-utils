@@ -325,7 +325,7 @@ exports.default = { query: query, queryFromStr: queryFromStr, hash: hash, hostna
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.pathname = exports.sub = exports.domain = exports.hostname = exports.hash = exports.queryFromStr = exports.query = exports.ago = exports.duration = exports.formatDate = exports.debounce = exports.throtte = exports.newArray = exports.unique = exports.swap = exports.deepClone = undefined;
+exports.subStr = exports.len = exports.string = exports.pathname = exports.sub = exports.domain = exports.hostname = exports.hash = exports.queryFromStr = exports.query = exports.ago = exports.duration = exports.formatDate = exports.debounce = exports.throtte = exports.newArray = exports.unique = exports.swap = exports.deepClone = undefined;
 
 var _clone = __webpack_require__(1);
 
@@ -345,13 +345,15 @@ var _url2 = _interopRequireDefault(_url);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var utils = Object.assign({}, _clone2.default, _array2.default, { throtte: _array.throtte, debounce: _array.debounce }, _date2.default, _url2.default); /**
-                                                                                                                                                         * @author xiaoping
-                                                                                                                                                         * @email edwardhjp@gmail.com
-                                                                                                                                                         * @create date 2017-08-18 09:40:00
-                                                                                                                                                         * @modify date 2017-08-18 09:40:00
-                                                                                                                                                         * @desc [utils方法]
-                                                                                                                                                        */
+/**
+ * @author xiaoping
+ * @email edwardhjp@gmail.com
+ * @create date 2017-08-18 09:40:00
+ * @modify date 2017-08-18 09:40:00
+ * @desc [utils方法]
+*/
+
+var utils = Object.assign({}, _clone2.default, _array2.default, { throtte: _array.throtte, debounce: _array.debounce }, _date2.default, _url2.default);
 
 exports.default = utils;
 exports.deepClone = _clone.deepClone;
@@ -370,6 +372,9 @@ exports.hostname = _url.hostname;
 exports.domain = _url.domain;
 exports.sub = _url.sub;
 exports.pathname = _url.pathname;
+exports.string = _url2.default;
+exports.len = _url.len;
+exports.subStr = _url.subStr;
 
 /***/ })
 /******/ ]);

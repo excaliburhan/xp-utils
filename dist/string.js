@@ -70,12 +70,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 6:
+/***/ 5:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -84,58 +84,20 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.throttle = throttle;
-exports.debounce = debounce;
-// 节流函数，指定时间执行一次
-function throttle(fn, waitTime, immediate, isDebounce) {
-  var timer = null;
-  var lastTime = 0; // last execute time
-
-  return function () {
-    function exec() {
-      lastTime = +new Date();
-      fn.apply(context, args);
-    }
-
-    function clear() {
-      timer = null;
-    }
-
-    var context = this;
-    var args = arguments;
-    var nowTime = +new Date();
-    var passTime = nowTime - lastTime;
-
-    if (isDebounce && !timer) {
-      exec();
-    }
-
-    if (timer) {
-      clearTimeout(timer);
-    }
-
-    if (immediate && !timer) {
-      exec();
-    }
-
-    if (!isDebounce && passTime > waitTime) {
-      exec();
-    } else {
-      if (isDebounce) {
-        timer = setTimeout(clear, waitTime);
-      } else {
-        timer = setTimeout(exec, waitTime - passTime);
-      }
-    }
-  };
+exports.len = len;
+exports.subStr = subStr;
+// 字符长度计算
+function len(str) {
+  return str.replace(/[^\x00-\xff]/g, '__').length;
 }
 
-// 防抖函数，到达指定时间间隔执行
-function debounce(fn, waitTime, immediate) {
-  return throttle(fn, waitTime, immediate, true);
+// 按照长度截取字符串
+function subStr(str, len) {
+  var reg = /[\u4e00-\u9fa5]/g;
+  var slice = str.substring(0, len);
+  var realLen = len - ~~(slice.match(reg) && slice.match(reg).length);
+  return slice.substring(0, realLen || 1);
 }
-
-exports.default = { throttle: throttle, debounce: debounce };
 
 /***/ })
 
