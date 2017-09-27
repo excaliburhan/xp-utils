@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -325,6 +325,31 @@ exports.default = { query: query, queryFromStr: queryFromStr, hash: hash, hostna
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.len = len;
+exports.subStr = subStr;
+// 字符长度计算
+function len(str) {
+  return str.replace(/[^\x00-\xff]/g, '__').length;
+}
+
+// 按照长度截取字符串
+function subStr(str, len) {
+  var reg = /[\u4e00-\u9fa5]/g;
+  var slice = str.substring(0, len);
+  var realLen = len - ~~(slice.match(reg) && slice.match(reg).length);
+  return slice.substring(0, realLen || 1);
+}
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.subStr = exports.len = exports.string = exports.pathname = exports.sub = exports.domain = exports.hostname = exports.hash = exports.queryFromStr = exports.query = exports.ago = exports.duration = exports.formatDate = exports.debounce = exports.throtte = exports.newArray = exports.unique = exports.swap = exports.deepClone = undefined;
 
 var _clone = __webpack_require__(1);
@@ -342,6 +367,10 @@ var _date2 = _interopRequireDefault(_date);
 var _url = __webpack_require__(3);
 
 var _url2 = _interopRequireDefault(_url);
+
+var _string = __webpack_require__(4);
+
+var _string2 = _interopRequireDefault(_string);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -372,9 +401,9 @@ exports.hostname = _url.hostname;
 exports.domain = _url.domain;
 exports.sub = _url.sub;
 exports.pathname = _url.pathname;
-exports.string = _url2.default;
-exports.len = _url.len;
-exports.subStr = _url.subStr;
+exports.string = _string2.default;
+exports.len = _string.len;
+exports.subStr = _string.subStr;
 
 /***/ })
 /******/ ]);
