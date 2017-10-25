@@ -70,12 +70,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 7:
+/***/ 5:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -84,58 +84,31 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.throttle = throttle;
-exports.debounce = debounce;
-// 节流函数，指定时间执行一次
-function throttle(fn, waitTime, immediate, isDebounce) {
-  var timer = null;
-  var lastTime = 0; // last execute time
-
-  return function () {
-    function exec() {
-      lastTime = +new Date();
-      fn.apply(context, args);
-    }
-
-    function clear() {
-      timer = null;
-    }
-
-    var context = this;
-    var args = arguments;
-    var nowTime = +new Date();
-    var passTime = nowTime - lastTime;
-
-    if (isDebounce && !timer) {
-      exec();
-    }
-
-    if (timer) {
-      clearTimeout(timer);
-    }
-
-    if (immediate && !timer) {
-      exec();
-    }
-
-    if (!isDebounce && passTime > waitTime) {
-      exec();
-    } else {
-      if (isDebounce) {
-        timer = setTimeout(clear, waitTime);
-      } else {
-        timer = setTimeout(exec, waitTime - passTime);
-      }
-    }
-  };
+exports.thousands = thousands;
+exports.percent = percent;
+// 千分位
+function thousands(num) {
+  if (num === undefined) return '--';
+  num = num.toString();
+  var float = '';
+  var isFloat = num.indexOf('.') > -1;
+  if (isFloat) {
+    var arr = num.split('.');
+    num = arr[0];
+    float = '.' + arr[1];
+  }
+  return num.replace(/(\d)(?=(?:\d{3})+$)/g, '$1,') + float;
 }
 
-// 防抖函数，到达指定时间间隔执行
-function debounce(fn, waitTime, immediate) {
-  return throttle(fn, waitTime, immediate, true);
+// 百分比，默认保存两位
+function percent(num) {
+  var fixed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
+
+  if (num === undefined) return '--';
+  return (num * 100).toFixed(fixed) + '%';
 }
 
-exports.default = { throttle: throttle, debounce: debounce };
+exports.default = { thousands: thousands, percent: percent };
 
 /***/ })
 
