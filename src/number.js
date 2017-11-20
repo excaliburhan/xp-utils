@@ -1,6 +1,9 @@
 // 千分位
-export function thousands (num) {
+export function thousands (num, fixed) {
   if (num === undefined) return '--'
+  if (fixed) {
+    num = num.toFixed(fixed)
+  }
   num = num.toString()
   let float = ''
   const isFloat = num.indexOf('.') > -1
