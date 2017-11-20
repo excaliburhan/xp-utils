@@ -353,8 +353,11 @@ Object.defineProperty(exports, "__esModule", {
 exports.thousands = thousands;
 exports.percent = percent;
 // 千分位
-function thousands(num) {
+function thousands(num, fixed) {
   if (num === undefined) return '--';
+  if (fixed) {
+    num = num.toFixed(fixed);
+  }
   num = num.toString();
   var float = '';
   var isFloat = num.indexOf('.') > -1;
