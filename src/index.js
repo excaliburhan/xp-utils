@@ -12,8 +12,9 @@ import { throtte, debounce } from './array'
 import date, { formatDate, duration, ago } from './date.js'
 import url, { query, queryFromStr, hash, hostname, domain, sub, pathname } from './url.js'
 import string, { len, subStr } from './string.js'
+import number, { thousands, percent } from './number.js'
 
-const utils = Object.assign({}, clone, array, { throtte, debounce }, date, url)
+const utils = Object.assign({}, clone, array, { throtte, debounce }, date, url, number)
 
 export default utils
 export {
@@ -29,4 +30,6 @@ export {
   query, queryFromStr, hash, hostname, domain, sub, pathname,
   // string.js
   string, len, subStr,
+  // number.js
+  number, thousands, percent,
 }

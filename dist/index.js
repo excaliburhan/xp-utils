@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -325,7 +325,71 @@ exports.default = { query: query, queryFromStr: queryFromStr, hash: hash, hostna
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.subStr = exports.len = exports.string = exports.pathname = exports.sub = exports.domain = exports.hostname = exports.hash = exports.queryFromStr = exports.query = exports.ago = exports.duration = exports.formatDate = exports.debounce = exports.throtte = exports.newArray = exports.unique = exports.swap = exports.deepClone = undefined;
+exports.len = len;
+exports.subStr = subStr;
+// 字符长度计算
+function len(str) {
+  return str.replace(/[^\x00-\xff]/g, '__').length;
+}
+
+// 按照长度截取字符串
+function subStr(str, len) {
+  var reg = /[\u4e00-\u9fa5]/g;
+  var slice = str.substring(0, len);
+  var realLen = len - ~~(slice.match(reg) && slice.match(reg).length);
+  return slice.substring(0, realLen || 1);
+}
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.thousands = thousands;
+exports.percent = percent;
+// 千分位
+function thousands(num, fixed) {
+  if (num === undefined) return '--';
+  if (fixed) {
+    num = num.toFixed(fixed);
+  }
+  num = num.toString();
+  var float = '';
+  var isFloat = num.indexOf('.') > -1;
+  if (isFloat) {
+    var arr = num.split('.');
+    num = arr[0];
+    float = '.' + arr[1];
+  }
+  return num.replace(/(\d)(?=(?:\d{3})+$)/g, '$1,') + float;
+}
+
+// 百分比，默认保存两位
+function percent(num) {
+  var fixed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
+
+  if (num === undefined) return '--';
+  return (num * 100).toFixed(fixed) + '%';
+}
+
+exports.default = { thousands: thousands, percent: percent };
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.percent = exports.thousands = exports.number = exports.subStr = exports.len = exports.string = exports.pathname = exports.sub = exports.domain = exports.hostname = exports.hash = exports.queryFromStr = exports.query = exports.ago = exports.duration = exports.formatDate = exports.debounce = exports.throtte = exports.newArray = exports.unique = exports.swap = exports.deepClone = undefined;
 
 var _clone = __webpack_require__(1);
 
@@ -343,17 +407,23 @@ var _url = __webpack_require__(3);
 
 var _url2 = _interopRequireDefault(_url);
 
+var _string = __webpack_require__(4);
+
+var _string2 = _interopRequireDefault(_string);
+
+var _number = __webpack_require__(5);
+
+var _number2 = _interopRequireDefault(_number);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @author xiaoping
- * @email edwardhjp@gmail.com
- * @create date 2017-08-18 09:40:00
- * @modify date 2017-08-18 09:40:00
- * @desc [utils方法]
-*/
-
-var utils = Object.assign({}, _clone2.default, _array2.default, { throtte: _array.throtte, debounce: _array.debounce }, _date2.default, _url2.default);
+var utils = Object.assign({}, _clone2.default, _array2.default, { throtte: _array.throtte, debounce: _array.debounce }, _date2.default, _url2.default, _number2.default); /**
+                                                                                                                                                                           * @author xiaoping
+                                                                                                                                                                           * @email edwardhjp@gmail.com
+                                                                                                                                                                           * @create date 2017-08-18 09:40:00
+                                                                                                                                                                           * @modify date 2017-08-18 09:40:00
+                                                                                                                                                                           * @desc [utils方法]
+                                                                                                                                                                          */
 
 exports.default = utils;
 exports.deepClone = _clone.deepClone;
@@ -372,9 +442,12 @@ exports.hostname = _url.hostname;
 exports.domain = _url.domain;
 exports.sub = _url.sub;
 exports.pathname = _url.pathname;
-exports.string = _url2.default;
-exports.len = _url.len;
-exports.subStr = _url.subStr;
+exports.string = _string2.default;
+exports.len = _string.len;
+exports.subStr = _string.subStr;
+exports.number = _number2.default;
+exports.thousands = _number.thousands;
+exports.percent = _number.percent;
 
 /***/ })
 /******/ ]);

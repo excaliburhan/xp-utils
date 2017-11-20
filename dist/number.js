@@ -70,12 +70,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 4:
+/***/ 5:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -84,20 +84,34 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.len = len;
-exports.subStr = subStr;
-// 字符长度计算
-function len(str) {
-  return str.replace(/[^\x00-\xff]/g, '__').length;
+exports.thousands = thousands;
+exports.percent = percent;
+// 千分位
+function thousands(num, fixed) {
+  if (num === undefined) return '--';
+  if (fixed) {
+    num = num.toFixed(fixed);
+  }
+  num = num.toString();
+  var float = '';
+  var isFloat = num.indexOf('.') > -1;
+  if (isFloat) {
+    var arr = num.split('.');
+    num = arr[0];
+    float = '.' + arr[1];
+  }
+  return num.replace(/(\d)(?=(?:\d{3})+$)/g, '$1,') + float;
 }
 
-// 按照长度截取字符串
-function subStr(str, len) {
-  var reg = /[\u4e00-\u9fa5]/g;
-  var slice = str.substring(0, len);
-  var realLen = len - ~~(slice.match(reg) && slice.match(reg).length);
-  return slice.substring(0, realLen || 1);
+// 百分比，默认保存两位
+function percent(num) {
+  var fixed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
+
+  if (num === undefined) return '--';
+  return (num * 100).toFixed(fixed) + '%';
 }
+
+exports.default = { thousands: thousands, percent: percent };
 
 /***/ })
 
