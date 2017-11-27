@@ -7,8 +7,8 @@
 */
 
 import clone, { deepClone } from './clone.js'
-import array, { swap, unique, newArray } from './array'
-import { throtte, debounce } from './array'
+import array, { swap, unique, newArray } from './array.js'
+import { throtte, debounce } from './throtte.js'
 import date, { formatDate, duration, ago } from './date.js'
 import url, { query, queryFromStr, hash, hostname, domain, sub, pathname } from './url.js'
 import string, { len, subStr } from './string.js'
