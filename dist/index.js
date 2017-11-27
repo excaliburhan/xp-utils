@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -220,6 +220,69 @@ exports.default = { formatDate: formatDate, duration: duration, ago: ago };
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.throttle = throttle;
+exports.debounce = debounce;
+// 节流函数，指定时间执行一次
+function throttle(fn, waitTime, immediate, isDebounce) {
+  var timer = null;
+  var lastTime = 0; // last execute time
+
+  return function () {
+    function exec() {
+      lastTime = +new Date();
+      fn.apply(context, args);
+    }
+
+    function clear() {
+      timer = null;
+    }
+
+    var context = this;
+    var args = arguments;
+    var nowTime = +new Date();
+    var passTime = nowTime - lastTime;
+
+    if (isDebounce && !timer) {
+      exec();
+    }
+
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    if (immediate && !timer) {
+      exec();
+    }
+
+    if (!isDebounce && passTime > waitTime) {
+      exec();
+    } else {
+      if (isDebounce) {
+        timer = setTimeout(clear, waitTime);
+      } else {
+        timer = setTimeout(exec, waitTime - passTime);
+      }
+    }
+  };
+}
+
+// 防抖函数，到达指定时间间隔执行
+function debounce(fn, waitTime, immediate) {
+  return throttle(fn, waitTime, immediate, true);
+}
+
+exports.default = { throttle: throttle, debounce: debounce };
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.query = query;
 exports.queryFromStr = queryFromStr;
 exports.hash = hash;
@@ -316,7 +379,7 @@ function pathname() {
 exports.default = { query: query, queryFromStr: queryFromStr, hash: hash, hostname: hostname, domain: domain, sub: sub, pathname: pathname };
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -341,7 +404,7 @@ function subStr(str, len) {
 }
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -380,7 +443,7 @@ function percent(num) {
 exports.default = { thousands: thousands, percent: percent };
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -399,39 +462,41 @@ var _array = __webpack_require__(0);
 
 var _array2 = _interopRequireDefault(_array);
 
+var _throtte = __webpack_require__(3);
+
 var _date = __webpack_require__(2);
 
 var _date2 = _interopRequireDefault(_date);
 
-var _url = __webpack_require__(3);
+var _url = __webpack_require__(4);
 
 var _url2 = _interopRequireDefault(_url);
 
-var _string = __webpack_require__(4);
+var _string = __webpack_require__(5);
 
 var _string2 = _interopRequireDefault(_string);
 
-var _number = __webpack_require__(5);
+var _number = __webpack_require__(6);
 
 var _number2 = _interopRequireDefault(_number);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var utils = Object.assign({}, _clone2.default, _array2.default, { throtte: _array.throtte, debounce: _array.debounce }, _date2.default, _url2.default, _number2.default); /**
-                                                                                                                                                                           * @author xiaoping
-                                                                                                                                                                           * @email edwardhjp@gmail.com
-                                                                                                                                                                           * @create date 2017-08-18 09:40:00
-                                                                                                                                                                           * @modify date 2017-08-18 09:40:00
-                                                                                                                                                                           * @desc [utils方法]
-                                                                                                                                                                          */
+var utils = Object.assign({}, _clone2.default, _array2.default, { throtte: _throtte.throtte, debounce: _throtte.debounce }, _date2.default, _url2.default, _number2.default); /**
+                                                                                                                                                                               * @author xiaoping
+                                                                                                                                                                               * @email edwardhjp@gmail.com
+                                                                                                                                                                               * @create date 2017-08-18 09:40:00
+                                                                                                                                                                               * @modify date 2017-08-18 09:40:00
+                                                                                                                                                                               * @desc [utils方法]
+                                                                                                                                                                              */
 
 exports.default = utils;
 exports.deepClone = _clone.deepClone;
 exports.swap = _array.swap;
 exports.unique = _array.unique;
 exports.newArray = _array.newArray;
-exports.throtte = _array.throtte;
-exports.debounce = _array.debounce;
+exports.throtte = _throtte.throtte;
+exports.debounce = _throtte.debounce;
 exports.formatDate = _date.formatDate;
 exports.duration = _date.duration;
 exports.ago = _date.ago;
