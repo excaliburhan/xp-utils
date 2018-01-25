@@ -1,4 +1,5 @@
 // 字符长度计算
+/* eslint-disable */ 
 export function len (str) {
   return str.replace(/[^\x00-\xff]/g, '__').length
 }
@@ -10,3 +11,5 @@ export function subStr (str, len) {
   const realLen = len - (~~(slice.match(reg) && slice.match(reg).length))
   return slice.substring(0, realLen || 1)
 }
+
+export default { len, subStr }

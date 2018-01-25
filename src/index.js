@@ -6,15 +6,15 @@
  * @desc [utils方法]
 */
 
-import clone, { deepClone } from './clone.js'
-import array, { swap, unique, newArray } from './array.js'
-import { throtte, debounce } from './throtte.js'
-import date, { formatDate, duration, ago } from './date.js'
-import url, { query, queryFromStr, hash, hostname, domain, sub, pathname } from './url.js'
-import string, { len, subStr } from './string.js'
-import number, { thousands, percent } from './number.js'
+import clone, { deepClone } from './lib/clone.js'
+import array, { swap, unique, newArray } from './lib/array.js'
+import { throttle, debounce } from './lib/throtte.js'
+import date, { formatDate, duration, ago } from './lib/date.js'
+import url, { query, queryFromStr, hash, hostname, domain, sub, pathname } from './lib/url.js'
+import string, { len, subStr } from './lib/string.js'
+import number, { thousands, percent } from './lib/number.js'
 
-const utils = Object.assign({}, clone, array, { throtte, debounce }, date, url, number)
+const utils = Object.assign({}, clone, array, { throttle, debounce }, date, url, number)
 
 export default utils
 export {
@@ -23,7 +23,7 @@ export {
   // array.js
   swap, unique, newArray,
   // throtte.js
-  throtte, debounce,
+  throttle, debounce,
   // date.js
   formatDate, duration, ago,
   // url.js

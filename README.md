@@ -10,7 +10,7 @@ A JavaScript utility library
 - Fully use
 
 ```js
-import _ from 'xp-utils' // import clone from 'xp-utils/dist/clone.js'
+import _ from 'xp-utils'
 
 const obj1 = { a: 1, b: { c: 2 } }
 const obj2 = _.deepClone(obj1) // const obj2 = clone.deepClone(obj1)
@@ -22,7 +22,7 @@ console.log(obj2) // { a: 3, b: { c: 2 } }
 - On demand
 
 ```js
-import { deepClone } from 'xp-utils' // import { deepClone } from 'xp-utils/dist/clone.js'
+import { deepClone } from 'xp-utils'
 
 const obj1 = { a: 1, b: { c: 2 } }
 const obj2 = deepClone(obj1)
@@ -68,4 +68,3 @@ console.log(obj2) // { a: 3, b: { c: 2 } }
 
 - len
 - subStr
-
