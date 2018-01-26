@@ -29,8 +29,6 @@ function deepClone(source) {
   return targetObj;
 }
 
-var clone = { deepClone: deepClone };
-
 // 交换数组中元素位置
 function swap(arr, index1, index2) {
   arr[index1] = arr.splice(index2, 1, arr[index1])[0];
@@ -52,8 +50,6 @@ function newArray(num) {
     return i + from;
   });
 }
-
-var array = { swap: swap, unique: unique, newArray: newArray };
 
 // 节流函数，指定时间执行一次
 function throttle(fn, waitTime, immediate, isDebounce) {
@@ -154,8 +150,6 @@ function ago(time) {
   }
 }
 
-var date = { formatDate: formatDate, duration: duration, ago: ago };
-
 // 获取url的query
 function query(name) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -242,8 +236,6 @@ function pathname() {
   return window.location.pathname;
 }
 
-var url = { query: query, queryFromStr: queryFromStr, hash: hash, hostname: hostname, domain: domain, sub: sub, pathname: pathname };
-
 // 字符长度计算
 /* eslint-disable */
 function len(str) {
@@ -257,8 +249,6 @@ function subStr(str, len) {
   var realLen = len - ~~(slice.match(reg) && slice.match(reg).length);
   return slice.substring(0, realLen || 1);
 }
-
-var string = { len: len, subStr: subStr };
 
 // 千分位
 function thousands(num, fixed) {
@@ -285,8 +275,6 @@ function percent(num) {
   return (num * 100).toFixed(fixed) + '%';
 }
 
-var number = { thousands: thousands, percent: percent };
-
 /**
  * @author xiaoping
  * @email edwardhjp@gmail.com
@@ -295,7 +283,22 @@ var number = { thousands: thousands, percent: percent };
  * @desc [utils方法]
 */
 
-var utils = Object.assign({}, clone, array, { throttle: throttle, debounce: debounce }, date, url, number);
+var utils = {
+  // clone.js
+  deepClone: deepClone,
+  // array.js
+  swap: swap, unique: unique, newArray: newArray,
+  // throtte.js
+  throttle: throttle, debounce: debounce,
+  // date.js
+  formatDate: formatDate, duration: duration, ago: ago,
+  // url.js
+  query: query, queryFromStr: queryFromStr, hash: hash, hostname: hostname, domain: domain, sub: sub, pathname: pathname,
+  // string.js
+  len: len, subStr: subStr,
+  // number.js
+  thousands: thousands, percent: percent
+};
 
 exports['default'] = utils;
 exports.deepClone = deepClone;
@@ -314,10 +317,8 @@ exports.hostname = hostname;
 exports.domain = domain;
 exports.sub = sub;
 exports.pathname = pathname;
-exports.string = string;
 exports.len = len;
 exports.subStr = subStr;
-exports.number = number;
 exports.thousands = thousands;
 exports.percent = percent;
 

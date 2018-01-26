@@ -6,18 +6,15 @@
  * @desc [utils方法]
 */
 
-import clone, { deepClone } from './lib/clone.js'
-import array, { swap, unique, newArray } from './lib/array.js'
+import { deepClone } from './lib/clone.js'
+import { swap, unique, newArray } from './lib/array.js'
 import { throttle, debounce } from './lib/throtte.js'
-import date, { formatDate, duration, ago } from './lib/date.js'
-import url, { query, queryFromStr, hash, hostname, domain, sub, pathname } from './lib/url.js'
-import string, { len, subStr } from './lib/string.js'
-import number, { thousands, percent } from './lib/number.js'
+import { formatDate, duration, ago } from './lib/date.js'
+import { query, queryFromStr, hash, hostname, domain, sub, pathname } from './lib/url.js'
+import { len, subStr } from './lib/string.js'
+import { thousands, percent } from './lib/number.js'
 
-const utils = Object.assign({}, clone, array, { throttle, debounce }, date, url, number)
-
-export default utils
-export {
+const utils = {
   // clone.js
   deepClone,
   // array.js
@@ -29,7 +26,18 @@ export {
   // url.js
   query, queryFromStr, hash, hostname, domain, sub, pathname,
   // string.js
-  string, len, subStr,
+  len, subStr,
   // number.js
-  number, thousands, percent,
+  thousands, percent,
+}
+
+export default utils
+export {
+  deepClone,
+  swap, unique, newArray,
+  throttle, debounce,
+  formatDate, duration, ago,
+  query, queryFromStr, hash, hostname, domain, sub, pathname,
+  len, subStr,
+  thousands, percent,
 }
