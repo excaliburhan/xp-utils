@@ -166,19 +166,18 @@ function query(name) {
   } else {
     urlStr = isHash ? window.location.hash : window.location.search;
   }
-  urlStr = urlStr.substr(1);
   if (name) {
-    reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+    reg = new RegExp('(\?|&)' + name + '=([^&#]*)');
     query = urlStr.match(reg);
     return query !== null ? decodeURIComponent(query[2]) : null;
   }
-  reg = new RegExp(/(^|&)(\w+)=([\w]*)/, 'g');
+  reg = new RegExp(/(\?|&)(\w+)=([^&#]*)/, 'g');
   query = urlStr.match(reg);
   if (Array.isArray(query)) {
     ret = {};
     query.forEach(function (v) {
       var arr = v.split('=');
-      if (arr[0].indexOf('&') > -1) arr[0] = arr[0].slice(1);
+      arr[0] = arr[0].slice(1); // delete `?` or `&`
       ret[arr[0]] = decodeURIComponent(arr[1]);
     });
   } else {
@@ -300,7 +299,7 @@ var utils = {
   thousands: thousands, percent: percent
 };
 
-exports['default'] = utils;
+exports.default = utils;
 exports.deepClone = deepClone;
 exports.swap = swap;
 exports.unique = unique;
