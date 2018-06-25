@@ -281,7 +281,7 @@ var utils = {
   deepClone: deepClone,
   // array.js
   swap: swap, unique: unique, newArray: newArray,
-  // throtte.js
+  // throttle.js
   throttle: throttle, debounce: debounce,
   // date.js
   formatDate: formatDate, duration: duration, ago: ago,

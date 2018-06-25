@@ -8,7 +8,7 @@
 
 import { deepClone } from './lib/clone.js'
 import { swap, unique, newArray } from './lib/array.js'
-import { throttle, debounce } from './lib/throtte.js'
+import { throttle, debounce } from './lib/throttle.js'
 import { formatDate, duration, ago } from './lib/date.js'
 import { query, queryFromStr, hash, hostname, domain, sub, pathname } from './lib/url.js'
 import { len, subStr } from './lib/string.js'
@@ -19,7 +19,7 @@ const utils = {
   deepClone,
   // array.js
   swap, unique, newArray,
-  // throtte.js
+  // throttle.js
   throttle, debounce,
   // date.js
   formatDate, duration, ago,
