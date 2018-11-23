@@ -1,13 +1,12 @@
 # xp-utils
 A JavaScript utility library
 
-### Installation
+## Installation
 
 > npm i xp-utils --save
 
-### Usage
-
-- Fully use
+## Usage
+* Fully use
 
 ```js
 import _ from 'xp-utils'
@@ -19,7 +18,7 @@ console.log(obj1) // { a: 1, b: { c: 2 } }
 console.log(obj2) // { a: 3, b: { c: 2 } }
 ```
 
-- On demand
+* On demand
 
 ```js
 import { deepClone } from 'xp-utils'
@@ -29,42 +28,47 @@ const obj2 = deepClone(obj1)
 obj2.a = 3
 console.log(obj1) // { a: 1, b: { c: 2 } }
 console.log(obj2) // { a: 3, b: { c: 2 } }
+
 ```
 
-### Methods
+## Methods
+### clone.js
+* deepClone
 
-#### clone.js
-
-- deepClone
-
-#### array.js
-
-- swap
-- unique
-- newArray
+### array.js
+* swap
+* unique
+* newArray
 
 ### throtte.js
+* throtte
+* debounce
 
-- throtte
-- debounce
+### date.js
+* formatDate
+* duration
+* ago
 
-#### date.js
+### url.js
+* qs
+* qsStringify
 
-- formatDate
-- duration
-- ago
+### string.js
+* len
+* subStr
+* padStart
+* padEnd
 
-#### url.js
+### ua.js
+* isIOS
+* isAndroid
+* isMobile
 
-- query
-- queryFromStr
-- hash
-- hostname
-- domain
-- sub
-- pathname
+### body-scroll.js
+* lockScroll
 
-#### string.js
-
-- len
-- subStr
+### security.js
+* decode
+* encode
+* escapeHtml
+* escapeJs

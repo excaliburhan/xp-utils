@@ -1,5 +1,8 @@
 // 格式化时间
 export function formatDate (time, fmt) {
+  if (typeof time === 'string') {
+    time = time.replace(/-/g, '/') // 兼容 iOS
+  }
   let d = new Date(time)
   if (!fmt) return time
   var obj = {
