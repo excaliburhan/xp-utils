@@ -4,6 +4,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
 };
 
+var toConsumableArray = function (arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+};
+
 // 对象和数组的深拷贝
 function deepClone(source) {
   if (!source && (typeof source === 'undefined' ? 'undefined' : _typeof(source)) !== 'object') {
@@ -45,57 +55,83 @@ function newArray(num) {
   });
 }
 
+// from underscore
 // 节流函数，指定时间执行一次
-function throttle(fn, waitTime, immediate, isDebounce) {
-  var timer = null;
-  var lastTime = 0; // last execute time
+function throttle(func, wait, options) {
+  var context, args, result;
+  var timeout = null;
+  var previous = 0;
+  if (!options) options = {};
+
+  var later = function later() {
+    previous = options.leading === false ? 0 : Date.now();
+    timeout = null;
+    result = func.apply(context, args);
+
+    if (!timeout) context = args = null;
+  };
 
   return function () {
-    function exec() {
-      lastTime = +new Date();
-      fn.apply(context, args);
-    }
+    var now = Date.now();
+    if (!previous && options.leading === false) previous = now;
+    var remaining = wait - (now - previous);
+    context = this;
+    args = arguments;
 
-    function clear() {
-      timer = null;
-    }
-
-    var context = this;
-    var args = arguments;
-    var nowTime = +new Date();
-    var passTime = nowTime - lastTime;
-
-    if (isDebounce && !timer) {
-      exec();
-    }
-
-    if (timer) {
-      clearTimeout(timer);
-    }
-
-    if (immediate && !timer) {
-      exec();
-    }
-
-    if (!isDebounce && passTime > waitTime) {
-      exec();
-    } else {
-      if (isDebounce) {
-        timer = setTimeout(clear, waitTime);
-      } else {
-        timer = setTimeout(exec, waitTime - passTime);
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
       }
+      previous = now;
+      result = func.apply(context, args);
+      if (!timeout) context = args = null;
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining);
     }
+
+    return result;
   };
 }
 
+// from underscore
 // 防抖函数，到达指定时间间隔执行
-function debounce(fn, waitTime, immediate) {
-  return throttle(fn, waitTime, immediate, true);
+function debounce(func, wait, immediate) {
+  var timeout, args, context, timestamp, result;
+
+  var later = function later() {
+    var last = Date.now() - timestamp;
+    if (last < wait && last >= 0) {
+      timeout = setTimeout(later, wait - last);
+    } else {
+      timeout = null;
+      if (!immediate) {
+        result = func.apply(context, args);
+        if (!timeout) context = args = null;
+      }
+    }
+  };
+
+  return function () {
+    context = this;
+    args = arguments;
+    timestamp = Date.now();
+    var callNow = immediate && !timeout;
+    if (!timeout) timeout = setTimeout(later, wait);
+    if (callNow) {
+      result = func.apply(context, args);
+      context = args = null;
+    }
+
+    return result;
+  };
 }
 
 // 格式化时间
 function formatDate(time, fmt) {
+  if (typeof time === 'string') {
+    time = time.replace(/-/g, '/'); // 兼容 iOS
+  }
   var d = new Date(time);
   if (!fmt) return time;
   var obj = {
@@ -144,8 +180,8 @@ function ago(time) {
   }
 }
 
-// 获取url的query
-function query(name) {
+// 获取 url 的 query
+function qs(name) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   var reg = void 0,
@@ -161,7 +197,7 @@ function query(name) {
     urlStr = isHash ? window.location.hash : window.location.search;
   }
   if (name) {
-    reg = new RegExp('(\?|&)' + name + '=([^&#]*)');
+    reg = new RegExp('(?|&)' + name + '=([^&#]*)');
     query = urlStr.match(reg);
     return query !== null ? decodeURIComponent(query[2]) : null;
   }
@@ -180,67 +216,61 @@ function query(name) {
   return ret;
 }
 
-// 从指定字符串获取query
-function queryFromStr(str) {
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-  var splitKey = '?';
-  if (options.isHash) {
-    splitKey = '#';
+// 将 url 参数转化为字符串
+function qsStringify(obj) {
+  var ret = [];
+  for (var i in obj) {
+    ret.push(i + '=' + decodeURIComponent(obj[i]));
   }
-  var strArr = str.split(splitKey);
-  strArr.shift();
-  str = splitKey + strArr.join(splitKey);
-  return query('', { str: str, isHash: options.isHash });
+  return ret.join('&');
 }
 
-// 获取url的hash
-function hash(name) {
-  return query(name, { isHash: true });
-}
-
-// 获取url的hostname
-function hostname() {
-  return window.location.hostname;
-}
-
-// 获取url的domain
-function domain() {
-  var hostname = window.location.hostname;
-  var hostArr = hostname.split('.');
-  if (hostArr.length > 2) {
-    hostArr.splice(0, 1);
-  }
-  return hostArr.join('.');
-}
-
-// 获取url的sub
-function sub() {
-  var hostname = window.location.hostname;
-  var hostArr = hostname.split('.');
-  if (hostArr.length > 2) {
-    return hostArr[1];
-  }
-  return '';
-}
-
-// 获取url的pathname
-function pathname() {
-  return window.location.pathname;
-}
-
-// 字符长度计算
+// 字符长度计算，中文算2个字符
 /* eslint-disable */
 function len(str) {
   return str.replace(/[^\x00-\xff]/g, '__').length;
 }
 
-// 按照长度截取字符串
+// 按照长度截取字符串，中文算2个字符
 function subStr(str, len) {
   var reg = /[\u4e00-\u9fa5]/g;
   var slice = str.substring(0, len);
   var realLen = len - ~~(slice.match(reg) && slice.match(reg).length);
   return slice.substring(0, realLen || 1);
+}
+
+// from zhangxinxu
+// 前置字符串补全
+function padStart(targetLength, padString) {
+  // 截断数字或将非数字转换为0
+  targetLength = targetLength >> 0;
+  padString = String(typeof padString !== 'undefined' ? padString : ' ');
+  if (this.length > targetLength || padString === '') {
+    return String(this);
+  }
+  targetLength = targetLength - this.length;
+  if (targetLength > padString.length) {
+    // 添加到初始值以确保长度足够
+    padString += padString.repeat(targetLength / padString.length);
+  }
+  return padString.slice(0, targetLength) + String(this);
+}
+
+// from zhangxinxu
+// 后缀字符串补全
+function padEnd(targetLength, padString) {
+  // 转数值或者非数值转换成0
+  targetLength = targetLength >> 0;
+  padString = String(typeof padString !== 'undefined' ? padString : ' ');
+  if (this.length > targetLength || padString === '') {
+    return String(this);
+  }
+  targetLength = targetLength - this.length;
+  if (targetLength > padString.length) {
+    // 添加到初始值以确保长度足够
+    padString += padString.repeat(targetLength / padString.length);
+  }
+  return String(this) + padString.slice(0, targetLength);
 }
 
 // 千分位
@@ -260,19 +290,199 @@ function thousands(num, fixed) {
   return num.replace(/(\d)(?=(?:\d{3})+$)/g, '$1,') + float;
 }
 
-// 百分比，默认保存两位
-function percent(num) {
+// fixed 方法，默认保存两位
+function fixed(num) {
   var fixed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
+  var rmZero = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
   if (num === undefined) return '--';
-  return (num * 100).toFixed(fixed) + '%';
+  num = (num * 100).toFixed(fixed);
+  if (rmZero) {
+    num = +num;
+  }
+  return num;
+}
+
+// 是否是 android
+function isAndroid() {
+  var u = navigator.userAgent;
+  return u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;
+}
+
+// 是否是 ios
+function isIOS() {
+  var u = navigator.userAgent;
+  return !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+}
+
+// 是否是手机端
+function isMobile() {
+  return isIOS() || isAndroid();
+}
+
+// @flow
+
+var firstTargetElement = null;
+var allTargetElements = [];
+var documentListenerAdded = false;
+var initialClientY = -1;
+var previousBodyOverflowSetting = void 0;
+var previousBodyPaddingRight = void 0;
+
+var preventDefault = function preventDefault(rawEvent) {
+  var e = rawEvent || window.event;
+  if (e.preventDefault) e.preventDefault();
+
+  return false;
+};
+var passiveOpts = { passive: false };
+
+var setOverflowHidden = function setOverflowHidden(options) {
+  // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
+  // the responsiveness for some reason. Setting within a setTimeout fixes this.
+  setTimeout(function () {
+    // If previousBodyPaddingRight is already set, don't set it again.
+    if (previousBodyPaddingRight === undefined) {
+      var reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
+      var doc = document.documentElement;
+      var scrollBarGap = window.innerWidth - doc.clientWidth;
+
+      if (reserveScrollBarGap && scrollBarGap > 0) {
+        previousBodyPaddingRight = document.body.style.paddingRight;
+        document.body.style.paddingRight = scrollBarGap + 'px';
+      }
+    }
+    // If previousBodyOverflowSetting is already set, don't set it again.
+    if (previousBodyOverflowSetting === undefined) {
+      previousBodyOverflowSetting = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+    }
+  });
+};
+
+var restoreOverflowSetting = function restoreOverflowSetting() {
+  // Setting overflow on body/documentElement synchronously in Desktop Safari slows down
+  // the responsiveness for some reason. Setting within a setTimeout fixes this.
+  setTimeout(function () {
+    if (previousBodyPaddingRight !== undefined) {
+      document.body.style.paddingRight = previousBodyPaddingRight;
+      // Restore previousBodyPaddingRight to undefined so setOverflowHidden knows it
+      // can be set again.
+      previousBodyPaddingRight = undefined;
+    }
+
+    if (previousBodyOverflowSetting !== undefined) {
+      document.body.style.overflow = previousBodyOverflowSetting;
+      // Restore previousBodyOverflowSetting to undefined
+      // so setOverflowHidden knows it can be set again.
+      previousBodyOverflowSetting = undefined;
+    }
+  });
+};
+
+// https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
+var isTargetElementTotallyScrolled = function isTargetElementTotallyScrolled(targetElement) {
+  return targetElement ? targetElement.scrollHeight - targetElement.scrollTop <= targetElement.clientHeight : false;
+};
+
+var handleScroll = function handleScroll(event, targetElement) {
+  var clientY = event.targetTouches[0].clientY - initialClientY;
+
+  if (targetElement && targetElement.scrollTop === 0 && clientY > 0) {
+    // element is at the top of its scroll
+    return preventDefault(event);
+  }
+
+  if (isTargetElementTotallyScrolled(targetElement) && clientY < 0) {
+    // element is at the top of its scroll
+    return preventDefault(event);
+  }
+
+  event.stopPropagation();
+  return true;
+};
+
+var disableBodyScroll = function disableBodyScroll(targetElement, options) {
+  if (isMobile()) {
+    // targetElement must be provided, and disableBodyScroll must not have been
+    // called on this targetElement before.
+    if (targetElement && !allTargetElements.includes(targetElement)) {
+      allTargetElements = [].concat(toConsumableArray(allTargetElements), [targetElement]);
+      targetElement.ontouchstart = function (event) {
+        if (event.targetTouches.length === 1) {
+          // detect single touch
+          initialClientY = event.targetTouches[0].clientY;
+        }
+      };
+      targetElement.ontouchmove = function (event) {
+        if (event.targetTouches.length === 1) {
+          // detect single touch
+          handleScroll(event, targetElement);
+        }
+      };
+      if (!documentListenerAdded) {
+        document.addEventListener('touchmove', preventDefault, { passive: false });
+        documentListenerAdded = true;
+      }
+    }
+  } else {
+    setOverflowHidden(options);
+    if (!firstTargetElement) firstTargetElement = targetElement;
+  }
+};
+
+var enableBodyScroll = function enableBodyScroll(targetElement) {
+  if (isMobile()) {
+    targetElement.ontouchstart = null;
+    targetElement.ontouchmove = null;
+    allTargetElements = allTargetElements.filter(function (element) {
+      return element !== targetElement;
+    });
+    if (documentListenerAdded && allTargetElements.length === 0) {
+      document.removeEventListener('touchmove', preventDefault, passiveOpts);
+      documentListenerAdded = false;
+    }
+  } else if (firstTargetElement === targetElement) {
+    restoreOverflowSetting();
+    firstTargetElement = null;
+  }
+};
+
+// 禁止 body 滚动
+function lockScroll(el, bool) {
+  if (bool === true) {
+    disableBodyScroll(el);
+  } else {
+    enableBodyScroll(el);
+  }
+}
+
+// 解析字符串
+function decode(s) {
+  try {
+    s = decodeURIComponent(s);
+  } catch (e) {}
+  return s;
+}
+
+// 编码字符串
+var encode = encodeURIComponent;
+
+// 安全 html
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/'/g, '&#39;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\//g, '&#x2f;');
+}
+
+// 安全 js
+function escapeJs(s) {
+  return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/`/g, '\\`').replace(/</g, '\\74').replace(/>/g, '\\76').replace(/\//g, '\\/').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t').replace(/\f/g, '\\f').replace(/\v/g, '\\v').replace(/\b/g, '\\b').replace(/\0/g, '\\0');
 }
 
 /**
  * @author xiaoping
  * @email edwardhjp@gmail.com
  * @create date 2017-08-18 09:40:00
- * @modify date 2017-08-18 09:40:00
+ * @modify date 2018-11-23 12:04:29
  * @desc [utils方法]
 */
 
@@ -280,18 +490,39 @@ var utils = {
   // clone.js
   deepClone: deepClone,
   // array.js
-  swap: swap, unique: unique, newArray: newArray,
+  swap: swap,
+  unique: unique,
+  newArray: newArray,
   // throttle.js
-  throttle: throttle, debounce: debounce,
+  throttle: throttle,
+  debounce: debounce,
   // date.js
-  formatDate: formatDate, duration: duration, ago: ago,
+  formatDate: formatDate,
+  duration: duration,
+  ago: ago,
   // url.js
-  query: query, queryFromStr: queryFromStr, hash: hash, hostname: hostname, domain: domain, sub: sub, pathname: pathname,
+  qs: qs,
+  qsStringify: qsStringify,
   // string.js
-  len: len, subStr: subStr,
+  len: len,
+  subStr: subStr,
+  padStart: padStart,
+  padEnd: padEnd,
   // number.js
-  thousands: thousands, percent: percent
+  thousands: thousands,
+  fixed: fixed,
+  // ua.js
+  isAndroid: isAndroid,
+  isIOS: isIOS,
+  isMobile: isMobile,
+  // body-scroll
+  lockScroll: lockScroll,
+  // security.js
+  decode: decode,
+  encode: encode,
+  escapeHtml: escapeHtml,
+  escapeJs: escapeJs
 };
 
 export default utils;
-export { deepClone, swap, unique, newArray, throttle, debounce, formatDate, duration, ago, query, queryFromStr, hash, hostname, domain, sub, pathname, len, subStr, thousands, percent };
+export { deepClone, swap, unique, newArray, throttle, debounce, formatDate, duration, ago, qs, qsStringify, len, subStr, padStart, padEnd, thousands, fixed, isAndroid, isIOS, isMobile, lockScroll, decode, encode, escapeHtml, escapeJs };
